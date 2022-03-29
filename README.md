@@ -3,20 +3,25 @@ Monitorizamos el inversor Huawei SUN2000L KTL L1 vía Modbus RTU  y publicamos l
 
 **What is this?**
 
+En el repositorio original, el servidor MQTT no tiene usuario/contraseña.
+Así mismo, envían los datos cada 1 segundo. 
+
+He añadido tres variables para poder cambiarlo desde la configuración.
+
 Usamos un fork de https://github.com/ccorderor/huawei-sun2000-modbus-rtu-mqtt que a su vez usa
 una versión forked de la librería HuaweiSolar (https://gitlab.com/Emilv2/huawei-solar) de Emilv2. 
 
 **Generar el container de docker**
 
-First, download the code from this repo (you can either clone the repo or download the gzip file and extract it). You should download it in the same computer you are going to run the container.
+Clonar el repositorio.
 
-Then, you need to generate the docker image. Enter inside the code folder, and execute the following command:
+Desde el directorio clonado generamos la imagen de docker con:
 
 ```
 docker build -t huawei-solar-rtu
 ```
 
-Once the docker image has been generated, you can use the following docker-compose service to initialize it:
+Una vez generada la imagen, podemos usar el siguiente servicio docker-compose para iniciarlo:
 
 
 ```
@@ -29,7 +34,7 @@ Once the docker image has been generated, you can use the following docker-compo
       - /dev/ttyUSB0:/dev/ttyUSB0
     environment:
       - INVERTER_PORT=/dev/ttyUSB0
-      - MQTT_HOST=192.168.1.15
+      - MQTT_HOST=192.168.1.40
       - MQTT_USER=XXXXXXX
       - MQTT_PASS=PPPPPPP
       - WAIT_SLEEP=N (en segundos)
