@@ -12,11 +12,14 @@ log = logging.getLogger()
 log.setLevel(logging.INFO)
 
 inverter_port = os.getenv('INVERTER_PORT', '/dev/ttyUSB0')
-mqtt_host = os.getenv('MQTT_HOST', '192.168.1.15')
+mqtt_host = os.getenv('MQTT_HOST', '192.168.1.40')
+mqtt_user = os.getenv('MQTT_USER', '')
+mqtt_pass = os.getenv('MQTT_PASS', '')
+wait_sleep = os.getenv('WAIT_SLEEP', '')
 
 inverter = base_solar.HuaweiSolar(inverter_port, slave=1)
 inverter._slave = 1
-inverter.wait = 1
+inverter.wait = wait_sleep
 
 #vars = ['state_1','state_2', 'state_3', 'alarm_1', 'alarm_2', 'alarm_3', 'pv_01_voltage', 'pv_01_current', 'pv_02_voltage','pv_02_current', 'input_power', 'grid_voltage', 
 #'grid_current', 'day_active_power_peak', 'active_power', 'reactive_power', 
@@ -69,7 +72,7 @@ def modbusAccess():
             cont = 0
 
         cont = cont + 1   
-        time.sleep(1)
+        time.sleep(wait_sleep)
 
 
 
@@ -90,7 +93,7 @@ clientMQTT = paho.mqtt.client.Client()
 clientMQTT.on_connect=on_connect #bind call back function
 clientMQTT.loop_start()
 log.info("Connecting to MQTT broker: %s ",mqtt_host)
-clientMQTT.username_pw_set(username="",password="")
+clientMQTT.username_pw_set(mqtt_user,mqtt_pass)
 clientMQTT.connect(mqtt_host, broker_port) #connect to broker
 while not clientMQTT.connected_flag: #wait in loop
     log.info("...")
